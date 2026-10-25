@@ -143,7 +143,12 @@
   /* ---------- audio players; sources arrive as data-src ---------- */
   function fmt(s) { if (!isFinite(s)) return '–:––'; s = Math.floor(s); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
   var players = [];
-  document.querySelectorAll('.player').forEach(function (p) {
+  function stopAll(except) {
+    players.forEach(function (o) {
+      if (o.audio !== except) { o.audio.pause(); o.el.classList.remove('is-playing'); o.btn.setAttribute('aria-label', 'Play'); }
+    });
+  }
+  function initPlayer(p) {
     var src = p.getAttribute('data-src');
     var btn = p.querySelector('.pbtn'), track = p.querySelector('.ptrack'), bar = p.querySelector('.pbar'), time = p.querySelector('.ptime');
     if (!src) { p.classList.add('is-empty'); btn.disabled = true; btn.setAttribute('aria-label', 'Recording to come'); return; }
@@ -158,7 +163,7 @@
     a.addEventListener('ended', function () { p.classList.remove('is-playing'); btn.setAttribute('aria-label', 'Play'); });
     btn.addEventListener('click', function () {
       if (a.paused) {
-        players.forEach(function (o) { if (o.audio !== a) { o.audio.pause(); o.el.classList.remove('is-playing'); o.btn.setAttribute('aria-label', 'Play'); } });
+        stopAll(a);
         a.play(); p.classList.add('is-playing'); btn.setAttribute('aria-label', 'Pause');
       } else {
         a.pause(); p.classList.remove('is-playing'); btn.setAttribute('aria-label', 'Play');
@@ -171,7 +176,8 @@
       if (e.key === 'ArrowRight') { a.currentTime = Math.min(a.duration, a.currentTime + 5); e.preventDefault(); }
       if (e.key === 'ArrowLeft') { a.currentTime = Math.max(0, a.currentTime - 5); e.preventDefault(); }
     });
-  });
+  }
+  document.querySelectorAll('.player').forEach(initPlayer);
 
   /* ---------- video: click-to-load YouTube embeds ---------- */
   function ytId(url) { var m = (url || '').match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{6,})/); return m ? m[1] : ''; }
@@ -180,6 +186,7 @@
     var title = box.getAttribute('data-title') || 'Video';
     var waiting = box.getAttribute('data-placeholder') || 'Video to come';
     box.innerHTML = '';
+    box.classList.remove('audio');
     box.classList.toggle('has-video', !!id);
     box.onclick = null;
     if (!id) {
@@ -203,18 +210,50 @@
   }
   document.querySelectorAll('.video').forEach(renderVideo);
 
-  /* home: the concerto card switches between movements */
+  /* home: the concerto card switches between movements.
+     A tab with data-video shows a video; a tab with data-audio shows an audio player in the same box. */
+  function renderAudio(box, src, label) {
+    stopAll(null);
+    box.innerHTML = '';
+    box.classList.remove('has-video');
+    box.classList.add('audio');
+    box.style.backgroundImage = '';
+    box.onclick = null; box.onkeydown = null;
+    box.removeAttribute('role'); box.removeAttribute('tabindex'); box.removeAttribute('aria-label');
+    box._players = box._players || {};
+    var p = box._players[src];
+    if (!p) {
+      p = document.createElement('div');
+      p.className = 'player';
+      p.setAttribute('data-src', src);
+      p.innerHTML = '<span class="plabel"></span>' +
+        '<button type="button" class="pbtn" aria-label="Play"></button>' +
+        '<div class="ptrack" role="slider" aria-label="Position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="pbar"></div></div>' +
+        '<span class="ptime">–:––</span>';
+      p.querySelector('.plabel').textContent = label || '';
+      initPlayer(p);
+      box._players[src] = p;
+    }
+    box.appendChild(p);
+  }
   var cv = document.getElementById('concerto-video');
   if (cv) {
     var tabs = cv.parentElement.querySelectorAll('.tabs button');
     tabs.forEach(function (b) {
       b.addEventListener('click', function () {
+        if (b.getAttribute('aria-pressed') === 'true') return;
         tabs.forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
         b.setAttribute('aria-pressed', 'true');
-        cv.setAttribute('data-video', b.getAttribute('data-video') || '');
-        cv.setAttribute('data-title', b.getAttribute('data-title') || '');
-        cv.setAttribute('data-placeholder', b.getAttribute('data-placeholder') || '');
-        renderVideo(cv);
+        var audio = b.getAttribute('data-audio');
+        if (audio) {
+          renderAudio(cv, audio, b.getAttribute('data-title'));
+        } else {
+          stopAll(null);
+          cv.setAttribute('data-video', b.getAttribute('data-video') || '');
+          cv.setAttribute('data-title', b.getAttribute('data-title') || '');
+          cv.setAttribute('data-placeholder', b.getAttribute('data-placeholder') || '');
+          renderVideo(cv);
+        }
       });
     });
   }

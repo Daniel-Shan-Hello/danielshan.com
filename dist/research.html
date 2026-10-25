@@ -72,21 +72,28 @@
     <section class="rsec" id="satb" aria-labelledby="h-satb">
       <svg class="finger" viewBox="0 0 40 56" aria-hidden="true"><text x="15" y="13" text-anchor="middle" font-size="15" style="font-family:var(--serif)" fill="currentColor">3</text><line x1="19.4" y1="19" x2="19.4" y2="45" stroke="currentColor" stroke-width="1.5"/><ellipse cx="14" cy="46" rx="6.3" ry="4.3" transform="rotate(-22 14 46)" fill="currentColor"/></svg>
       <h2 id="h-satb">SATB Harmony Grader and Solver</h2>
-      <p class="meta ui">Independent project. Python, Flask, VexFlow, SoundFont playback. <a href="https://github.com/Daniel-Shan-Hello/atb-harmony-solver-grader">Source on GitHub</a>.</p>
+      <p class="meta ui">Independent project. Python, VexFlow, SoundFont playback; Flask locally, Pyodide in the browser. <a href="https://github.com/Daniel-Shan-Hello/atb-harmony-solver-grader">Source on GitHub</a>.</p>
       <p class="finding">Obeying every rule is the easy part; the solver also has to sound like a student who listens.</p>
       <div class="prose">
         <p>Four-part harmony exercises are how music students learn voice leading, and grading them is slow, repetitive work for teachers. The grader adapts John Paul Ito's harmony curriculum at Carnegie Mellon, with his permission, into eleven categories of diagnostic feedback: voice leading, spacing and range, chord completion, parallel and direct intervals, leaps, and the resolution of tendency tones and chromatic chords. A student sees not only that a chord is wrong but which rule it breaks and where.</p>
         <p>Building the solver taught me more than the grader did. Avoiding part-writing errors is the easy part; a realization can obey every rule and still sound aimless. The solver therefore works in two stages: it searches for rule-valid realizations, then optimizes the musical preferences a student would be taught to hear, including smooth voice leading, comfortable ranges and spacing, a soprano line planned toward each cadence, attraction to fixed notes, and melodic shape across the phrase.</p>
-        <p>The tool runs as two Flask interfaces. Teachers write assignments and get one-click grading and reference solutions; students work in interactive notation with playback, exchange assignments and submissions as JSON files, and can check their own work before handing it in.</p>
+        <p>The tool has two interfaces. Teachers write assignments and get one-click grading and reference solutions; students work in interactive notation with playback, exchange assignments and submissions as JSON files, and can check their own work before handing it in. The original runs as two Flask apps; the teacher interface below runs the same Python engine directly in the browser, with no server.</p>
+      </div>
+      <p class="try"><a class="score-link" href="satb/">Try the grader and solver in your browser</a></p>
+      <div class="shots satb-shots">
+        <figure>
+          <a href="satb/"><img src="satb/img/solved.png" alt="A nine-bar chromatic progression in C major realized in four voices by the solver" width="1600" height="822"></a>
+          <figcaption class="caption">The solver's realization of I–V–vi–iv–♭II6–Ger65–I64–V–I, from Roman numerals and a final cadence alone.</figcaption>
+        </figure>
+        <figure>
+          <a href="satb/"><img src="satb/img/grader.png" alt="Grader results listing parallel octaves, parallel fifths, and an unresolved leading tone" width="900" height="1131"></a>
+          <figcaption class="caption">The grader on a realization with three planted mistakes.</figcaption>
+        </figure>
       </div>
       <figure class="wide-figure">
         <img src="img/teaching.jpg" alt="Daniel Shan teaching a harmony class in front of a projected orchestral score" width="1200" height="900">
         <figcaption class="caption">Back at my former high school, teaching harmony, December 2025. The grader grew out of classes like this one.</figcaption>
       </figure>
-      <div class="shots">
-        <figure><div class="media"><div class="ph">Student interface, screenshot to come</div></div></figure>
-        <figure><div class="media"><div class="ph">Teacher interface, screenshot to come</div></div></figure>
-      </div>
       <p class="note">Source code: <a href="https://github.com/Daniel-Shan-Hello/atb-harmony-solver-grader">github.com/Daniel-Shan-Hello/atb-harmony-solver-grader</a>.</p>
     </section>
   </main>

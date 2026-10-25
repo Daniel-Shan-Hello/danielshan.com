@@ -244,6 +244,12 @@ footer{margin-top:64px; padding-top:16px; border-top:1px solid var(--rule); colo
 .shots{display:grid; grid-template-columns:1fr; gap:16px; margin-top:24px}
 @media (min-width:640px){ .shots{grid-template-columns:repeat(2,minmax(0,1fr))} }
 .shots .media{aspect-ratio:16/10}
+.try{margin-top:24px}
+.try .score-link{margin-top:0}
+.satb-shots{grid-template-columns:1fr; align-items:start}
+@media (min-width:640px){ .satb-shots{grid-template-columns:minmax(0,2.4fr) minmax(0,1fr)} }
+.satb-shots img{display:block; width:100%; height:auto; border:1px solid var(--ink); background:#fff}
+.satb-shots figcaption{margin-top:8px}
 
 /* ---------- bio page ---------- */
 .bioblock{margin-top:36px}

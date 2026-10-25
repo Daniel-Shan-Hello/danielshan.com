@@ -17,7 +17,7 @@ SRC, ASSETS = ROOT / 'src', ROOT / 'assets'
 DIST, PREV = ROOT / 'dist', ROOT / 'preview'
 HEAD = (SRC / '_head.html').read_text(encoding='utf-8')
 NAV = (SRC / '_nav.html').read_text(encoding='utf-8')
-COPY_DIRS = ['assets', 'media', 'scores', 'cv', 'img']
+COPY_DIRS = ['assets', 'media', 'scores', 'cv', 'img', 'satb']
 
 def meta_and_body(text, name):
     m = re.match(r'\s*<!--meta\n(.*?)\n-->\n?', text, re.S)

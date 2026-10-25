@@ -13,6 +13,7 @@ Static site, no framework. Hosted on Cloudflare Pages, which serves the `dist/` 
 | `cv/` | CV PDFs. Replace a file here to update the download; the pages do not change. |
 | `img/` | Photographs. `og.jpg` is the link-preview image. |
 | `public/` | Files copied to the site root (`_headers`, `robots.txt`). |
+| `satb/` | The SATB harmony grader and solver, served at `/satb/`. See below. |
 | `tools/build.py` | Assembles `dist/` from the above. |
 | `dist/` | The finished site. Committed, so Cloudflare needs no build step. |
 
@@ -30,6 +31,17 @@ Common edits:
 - A new CV: replace the file in `cv/` and update the "Last updated" line in `src/index.html`.
 - A new work in the piano roll: add a line to `WORKS` in `assets/site.js` (title, year, duration in minutes, lane, description).
 - Keyboard navigation: `src/_nav.html`; it is inserted into every page at build time.
+
+## The SATB tool (`satb/`)
+
+A copy of the teacher interface from [atb-harmony-solver-grader](https://github.com/Daniel-Shan-Hello/atb-harmony-solver-grader), running with no server. The Python engine runs in the browser with Pyodide (self-hosted in `satb/pyodide/`, version 0.26.4, Apache-2.0).
+
+- `satb/engine/voice_grader.py`, `voice_solver.py`: copied unchanged from the SATB repository. After changing the engine there, copy these two files here again, build, and push.
+- `satb/engine/web_api.py`: stands in for the two Flask routes in `app.py` (`/api/grade`, `/api/solve`), with the same request and response shapes.
+- `satb/engine-worker.js`: loads Pyodide and the engine in a Web Worker.
+- `satb/api-shim.js`: answers the app's `fetch("/api/grade")` and `fetch("/api/solve")` calls from the worker; everything else goes to the network.
+- `satb/static/`: the app's own CSS and JS. Two small changes from the repository, both marked `site copy`: the soundfont path is relative, and `teacher.js` reads `window.SATB_LANG` and `window.SATB_EXAMPLE` so the page opens in English with an example loaded.
+- `satb/index.html`: the teacher template with relative paths, a site header, and the two examples.
 
 ## Keyboard navigation
 

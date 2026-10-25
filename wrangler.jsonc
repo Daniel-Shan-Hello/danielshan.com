@@ -1,0 +1,10 @@
+{
+  // Cloudflare: serve the dist/ folder as a static site. No build step; dist/ is committed.
+  "name": "danielshan-com",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}

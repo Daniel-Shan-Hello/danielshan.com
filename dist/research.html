@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Research &amp; Technology</title>
+<meta name="description" content="Automatic piano fingering estimation, score following and performance-to-score alignment, and an SATB harmony grader and solver.">
+<meta property="og:title" content="Research and technology: Yuyang (Daniel) Shan">
+<meta property="og:description" content="Automatic piano fingering estimation, score following and performance-to-score alignment, and an SATB harmony grader and solver.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://danielshan.com/research">
+<meta property="og:site_name" content="Daniel Shan">
+<meta property="og:image" content="https://danielshan.com/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23EEE9DE'/%3E%3Crect x='4.5' y='4.5' width='23' height='23' fill='%23FAF7F0' stroke='%231F1B17'/%3E%3Cline x1='12' y1='4.5' x2='12' y2='27.5' stroke='%231F1B17'/%3E%3Cline x1='20' y1='4.5' x2='20' y2='27.5' stroke='%231F1B17'/%3E%3Crect x='9.5' y='4.5' width='5' height='14' fill='%231F1B17'/%3E%3Crect x='17.5' y='4.5' width='5' height='14' fill='%231F1B17'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-section="research">
+<div class="page">
+  <header class="pagehead">
+    <a href="index.html">Yuyang (Daniel) Shan</a>
+    <span class="crumb">Research &amp; Technology</span>
+  </header>
+
+  <main class="article">
+    <h1>Research &amp; Technology</h1>
+    <p class="meta ui">Machine learning and music information retrieval, mostly on questions a pianist runs into at the keyboard. Three projects, in the order I would tell them.</p>
+
+    <section class="rsec" id="fingering" aria-labelledby="h-fingering">
+      <svg class="finger" viewBox="0 0 40 56" aria-hidden="true"><text x="15" y="13" text-anchor="middle" font-size="15" style="font-family:var(--serif)" fill="currentColor">1</text><line x1="19.4" y1="19" x2="19.4" y2="45" stroke="currentColor" stroke-width="1.5"/><ellipse cx="14" cy="46" rx="6.3" ry="4.3" transform="rotate(-22 14 46)" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      <h2 id="h-fingering">Automatic Piano Fingering Estimation</h2>
+      <p class="meta ui">Senior capstone, advised by Chris Donahue. 2026 to present.</p>
+      <p class="finding">At this data scale, the task rewards local inductive bias, not long-range context.</p>
+      <div class="prose">
+        <p>Fingering is one of the first decisions a pianist makes about a passage, and one the score almost never records. The project asks what a model needs in order to learn such decisions, and where the learning actually breaks down. It is a three-part study on the PIG dataset (Nakamura et al., 2020), evaluated with the match-rate metrics of Nakamura and colleagues on a fixed split. The discipline is as much the point as the results: every decision rule, threshold, and headline configuration is written and dated before the corresponding data exists, the test set is evaluated once per part after everything is locked, and null results are reported as null results. I designed the study, implemented all models and the evaluation harness, and ran every experiment; Professor Donahue advised on experimental design.</p>
+
+        <h3>Part 1. Where is the bottleneck?</h3>
+        <p>Five models on monophonic input, arranged so that each step changes one variable: a conditional feature bigram borrowed from NLP, a naive HMM, a linear-chain CRF with the same features, a Transformer encoder with a convolutional front-end, and that encoder with a CRF output layer, with Nakamura's published model retrained on our split as an external reference and human inter-annotator agreement as the ceiling. Every competent paradigm lands on the same validation plateau. Removing the convolutional front-end costs a great deal; removing self-attention costs nothing measurable. On the test set the feature CRF leads both neural models. At this data scale, strong inductive bias beats capacity.</p>
+
+        <h3>Part 2. Can weakly supervised pretraining move it?</h3>
+        <p>Masked pretraining on crowdsourced partial fingerings (ThumbSet) and on a corpus of roughly 4,400 unlabeled scores from PDMX, built with leakage checks and content-level deduplication. The pre-specified hypothesis, that joint score-and-finger masking beats either channel alone, was not met: pretraining helps, but the form of the objective makes no measurable difference, and a frozen-probe analysis showed why. Corpus size helps steadily; the curriculum arm is a null result. The largest single lever was simply training the pretraining stage to convergence. Under that protocol, finger-only pretraining with full fine-tuning became the first configuration in the study to exceed the Part 1 CRF.</p>
+
+        <h3>Part 3. Does it survive polyphony?</h3>
+        <p>The Part 2 recipe is kept fixed and only what polyphony forces is changed: interval channels for chords, a front-end that still sees a single temporal order, and separate evaluation on all, melodic, and chord notes. The test set was evaluated once, as a single frozen batch of every configuration and seed. The Part 2 result reproduced, and the pretrained model reads as competitive with a retrained published polyphonic baseline. The most interpretable finding came from a sweep over the attention window width, a design suggested by Professor Donahue in place of a with/without ablation: accuracy falls monotonically as the window widens, and the narrowest window, selected on validation, carried to test above the full-attention headline. The information useful for modeling the notes is not the information useful for choosing how to play them.</p>
+
+        <h3>Status</h3>
+        <p>Part 1 is complete with a full report; Part 2 is complete and archived with a code release; Part 3 experiments are complete with the archive frozen, and the write-up is in progress with the aim of submitting it for publication. The reports, figures, and code will be posted here once the write-up is out.</p>
+      </div>
+    </section>
+
+    <p class="orn" aria-hidden="true" style="margin-top:56px">❧</p>
+
+    <section class="rsec" id="score-following" aria-labelledby="h-sf">
+      <svg class="finger" viewBox="0 0 40 56" aria-hidden="true"><text x="15" y="13" text-anchor="middle" font-size="15" style="font-family:var(--serif)" fill="currentColor">2</text><line x1="19.4" y1="19" x2="19.4" y2="45" stroke="currentColor" stroke-width="1.5"/><ellipse cx="14" cy="46" rx="6.3" ry="4.3" transform="rotate(-22 14 46)" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+      <h2 id="h-sf">Score Following and Performance-to-Score Alignment</h2>
+      <p class="meta ui">Research assistant to Roger Dannenberg, Carnegie Mellon University. 2026 to present.</p>
+      <p class="finding">A score follower is only as good as the aligned data it is judged on, and the clock it is judged by.</p>
+      <div class="prose">
+        <p>A score follower listens to a performance and keeps track of where in the score the player is, which is what lets a computer accompany a live musician. Evaluating such systems needs performances aligned to their scores note by note, and good alignment data is scarce. My work in the group began with producing and checking that data and has moved toward how the followers themselves are evaluated and used.</p>
+        <p>For the opera Felicità I built a performance-to-score alignment dataset in the style of ASAP, covering the full work in nine sections across three acts. The pipeline processes the scores automatically, produces draft alignments, and flags the places most likely to be wrong; every section was then corrected by ear, since an alignment that looks right on paper can still be audibly wrong. I also compared two widely used piano datasets, ASAP, which interpolates between beats, and nASAP, which aligns individual notes, across 1,065 performances, and checked the places where they disagree by reading the score and listening, to separate genuine alignment errors from ambiguities built into the notation itself.</p>
+        <p>On the evaluation side, I found and corrected a bug in the group's score-following evaluation reader, which had been counting rows that are not note events; the fix substantially revised the reported error distributions and the comparison between the HMM and Accomplice followers. I am now developing rule-based online methods that predict performance time from a follower's output while respecting causal timing constraints and predictions already committed, evaluated on note onsets against both followers. Alongside this I contributed a structured review of the score-following literature, which categorizes studies by objective and method and records each one's evaluation protocol, to a group paper in preparation.</p>
+      </div>
+    </section>
+
+    <p class="orn" aria-hidden="true" style="margin-top:56px">❧</p>
+
+    <section class="rsec" id="satb" aria-labelledby="h-satb">
+      <svg class="finger" viewBox="0 0 40 56" aria-hidden="true"><text x="15" y="13" text-anchor="middle" font-size="15" style="font-family:var(--serif)" fill="currentColor">3</text><line x1="19.4" y1="19" x2="19.4" y2="45" stroke="currentColor" stroke-width="1.5"/><ellipse cx="14" cy="46" rx="6.3" ry="4.3" transform="rotate(-22 14 46)" fill="currentColor"/></svg>
+      <h2 id="h-satb">SATB Harmony Grader and Solver</h2>
+      <p class="meta ui">Independent project. Python, Flask, VexFlow, SoundFont playback. <a href="https://github.com/Daniel-Shan-Hello/atb-harmony-solver-grader">Source on GitHub</a>.</p>
+      <p class="finding">Obeying every rule is the easy part; the solver also has to sound like a student who listens.</p>
+      <div class="prose">
+        <p>Four-part harmony exercises are how music students learn voice leading, and grading them is slow, repetitive work for teachers. The grader adapts John Paul Ito's harmony curriculum at Carnegie Mellon, with his permission, into eleven categories of diagnostic feedback: voice leading, spacing and range, chord completion, parallel and direct intervals, leaps, and the resolution of tendency tones and chromatic chords. A student sees not only that a chord is wrong but which rule it breaks and where.</p>
+        <p>Building the solver taught me more than the grader did. Avoiding part-writing errors is the easy part; a realization can obey every rule and still sound aimless. The solver therefore works in two stages: it searches for rule-valid realizations, then optimizes the musical preferences a student would be taught to hear, including smooth voice leading, comfortable ranges and spacing, a soprano line planned toward each cadence, attraction to fixed notes, and melodic shape across the phrase.</p>
+        <p>The tool runs as two Flask interfaces. Teachers write assignments and get one-click grading and reference solutions; students work in interactive notation with playback, exchange assignments and submissions as JSON files, and can check their own work before handing it in.</p>
+      </div>
+      <figure class="wide-figure">
+        <img src="img/teaching.jpg" alt="Daniel Shan teaching a harmony class in front of a projected orchestral score" width="1200" height="900">
+        <figcaption class="caption">Back at my former high school, teaching harmony, December 2025. The grader grew out of classes like this one.</figcaption>
+      </figure>
+      <div class="shots">
+        <figure><div class="media"><div class="ph">Student interface, screenshot to come</div></div></figure>
+        <figure><div class="media"><div class="ph">Teacher interface, screenshot to come</div></div></figure>
+      </div>
+      <p class="note">Source code: <a href="https://github.com/Daniel-Shan-Hello/atb-harmony-solver-grader">github.com/Daniel-Shan-Hello/atb-harmony-solver-grader</a>.</p>
+    </section>
+  </main>
+</div>
+
+<!-- keyboard, standing on end: highest note at the top, like the keys beside a piano roll -->
+<nav class="rail" aria-label="Sections">
+  <div class="octave">
+    <a class="key white" href="index.html#home" data-section="home" data-note="B4"><span>Home</span></a>
+    <a class="key white" href="index.html#music" data-section="music" data-note="A4"><span>Music</span></a>
+    <a class="key white" href="index.html#research" data-section="research" data-note="G4"><span>Research</span></a>
+    <a class="key white" href="index.html#about" data-section="about" data-note="F4"><span>About</span></a>
+    <a class="key white" href="index.html#cv" data-section="cv" data-note="E4"><span>CV</span></a>
+    <a class="key white" href="index.html#contact" data-section="contact" data-note="D4"><span>Contact</span></a>
+    <a class="key white" href="bio.html" data-section="bio" data-note="C4"><span>Biography</span></a>
+    <button type="button" class="key black" data-pos="1" data-note="As4" aria-label="A sharp" tabindex="-1"></button>
+    <button type="button" class="key black" data-pos="2" data-note="Gs4" aria-label="G sharp" tabindex="-1"></button>
+    <button type="button" class="key black" data-pos="3" data-note="Fs4" aria-label="F sharp" tabindex="-1"></button>
+    <button type="button" class="key black" data-pos="5" data-note="Ds4" aria-label="D sharp" tabindex="-1"></button>
+    <button type="button" class="key black" data-pos="6" data-note="Cs4" aria-label="C sharp" tabindex="-1"></button>
+  </div>
+  <div class="below">
+    <button type="button" class="sound" data-sound aria-pressed="false" aria-label="Key sounds" title="Key sounds: off">
+      <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+      <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+    </button>
+    <span class="hint">The keys turn the pages.</span>
+  </div>
+</nav>
+
+<nav class="dock" aria-label="Sections">
+  <div class="octave">
+    <a class="key white" href="index.html#home" data-section="home" data-note="C4"><span>Home</span></a>
+    <a class="key white" href="index.html#music" data-section="music" data-note="D4"><span>Music</span></a>
+    <a class="key white" href="index.html#research" data-section="research" data-note="E4"><span>Research</span></a>
+    <a class="key white" href="index.html#about" data-section="about" data-note="F4"><span>About</span></a>
+    <a class="key white" href="index.html#cv" data-section="cv" data-note="G4"><span>CV</span></a>
+    <a class="key white" href="index.html#contact" data-section="contact" data-note="A4"><span>Contact</span></a>
+    <a class="key white" href="bio.html" data-section="bio" data-note="B4"><span>Bio</span></a>
+    <button type="button" class="key black" data-pos="1" data-note="Cs4" aria-label="C sharp" tabindex="-1"></button>
+    <button type="button" class="key black" data-pos="2" data-note="Ds4" aria-label="D sharp" tabindex="-1"></button>
+    <button type="button" class="key black" data-pos="4" data-note="Fs4" aria-label="F sharp" tabindex="-1"></button>
+    <button type="button" class="key black" data-pos="5" data-note="Gs4" aria-label="G sharp" tabindex="-1"></button>
+    <button type="button" class="key black" data-pos="6" data-note="As4" aria-label="A sharp" tabindex="-1"></button>
+  </div>
+  <button type="button" class="sound" data-sound aria-pressed="false" aria-label="Key sounds" title="Key sounds: off">
+    <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+    <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+  </button>
+</nav>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

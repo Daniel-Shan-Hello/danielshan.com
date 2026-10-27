@@ -34,7 +34,7 @@ Common edits:
 
 ## The SATB tool (`satb/`)
 
-A copy of the teacher interface from [atb-harmony-solver-grader](https://github.com/Daniel-Shan-Hello/atb-harmony-solver-grader), running with no server. The Python engine runs in the browser with Pyodide (self-hosted in `satb/pyodide/`, version 0.26.4, Apache-2.0).
+A copy of the teacher interface from [satb-harmony-solver-grader](https://github.com/Daniel-Shan-Hello/satb-harmony-solver-grader), running with no server. The Python engine runs in the browser with Pyodide (self-hosted in `satb/pyodide/`, version 0.26.4, Apache-2.0).
 
 - `satb/engine/voice_grader.py`, `voice_solver.py`: copied unchanged from the SATB repository. After changing the engine there, copy these two files here again, build, and push.
 - `satb/engine/web_api.py`: stands in for the two Flask routes in `app.py` (`/api/grade`, `/api/solve`), with the same request and response shapes.

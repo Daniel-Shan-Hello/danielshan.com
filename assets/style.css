@@ -117,7 +117,7 @@ figure{margin:0; min-width:0}
 .player.inline{padding:10px 0; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); margin-top:10px; position:relative}
 .player.inline .plabel{position:static; flex:none}
 .players{display:grid; gap:14px; margin-top:28px}
-.players .media.audio{aspect-ratio:auto; min-height:72px}
+.players .media.audio{aspect-ratio:auto; min-height:104px}
 
 /* ---------- home: works ---------- */
 .works{margin-top:40px}
@@ -138,6 +138,11 @@ figure{margin:0; min-width:0}
 .tabs button[aria-pressed="true"]{color:var(--felt); border-bottom-color:var(--felt)}
 .work h3{font-size:1.5rem; margin-top:18px}
 .work .meta{margin-top:6px}
+/* "for Viola and Wind Quintet": the subtitle as it stands on the score */
+.subtitle{font-family:var(--serif); font-size:1.08rem; line-height:1.3; color:var(--ink-soft); margin-top:4px}
+.work.anchor .subtitle{font-size:1.2rem}
+.article .subtitle{font-size:clamp(1.15rem,2vw,1.4rem); margin-top:8px}
+.article .subtitle + .meta{margin-top:14px}
 .work .blurb{margin-top:12px; font-size:1rem}
 .work .links{margin-top:auto; padding-top:16px; display:flex; flex-wrap:wrap; gap:6px 20px; font-size:.98rem}
 

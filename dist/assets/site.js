@@ -89,10 +89,10 @@
     { t: 'A Dream Within a Dream',          y: 2024, d: 5,  lane: 2, i: 'SATB choir and piano, text by Edgar Allan Poe' },
     { t: 'Piano Preludes',                  y: 2024, d: 9,  lane: 3, i: 'Solo piano, a collection, 2024–25' },
     { t: 'Haunted by Ghost',                y: 2025, d: 7,  lane: 1, i: 'Wind quintet and piano' },
-    { t: 'Piano Concerto in C-sharp minor', y: 2025, d: 25, lane: 0, i: 'Piano and string quintet, 2025–26', f: true, href: 'piano-concerto.html' },
+    { t: 'Piano Concerto in C-sharp minor', y: 2025, d: 25, lane: 0, i: 'For piano and string quintet, three movements, 2025–26', f: true, href: 'piano-concerto.html' },
     { t: 'A Red, Red Rose',                 y: 2026, d: 4,  lane: 2, i: 'Soprano and piano, text by Robert Burns' },
     { t: 'Piano Scherzo in G',              y: 2026, d: 5,  lane: 0, i: 'Piano and orchestra, premiere March 2027', f: true, href: 'piano-scherzo.html' },
-    { t: 'Viola Concertino in B minor',     y: 2026, d: 12, lane: 0, i: 'Viola and wind quintet, in progress', f: true, p: true, href: 'viola-concertino.html' }
+    { t: 'Viola Concertino in B minor',     y: 2026, d: 12, lane: 0, i: 'For viola and wind quintet, one movement in three parts; Part I complete', f: true, p: true, href: 'viola-concertino.html' }
   ];
   var svg = document.getElementById('pianoRoll');
   if (svg) {

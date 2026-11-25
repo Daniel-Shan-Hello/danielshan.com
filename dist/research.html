@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Research &amp; Technology</title>
-<meta name="description" content="Automatic piano fingering estimation, score following and performance-to-score alignment, and an SATB harmony grader and solver.">
+<meta name="description" content="Automatic piano fingering estimation, score following and performance-to-score alignment, and an SATB harmony solver and grader.">
 <meta property="og:title" content="Research and technology: Yuyang (Daniel) Shan">
-<meta property="og:description" content="Automatic piano fingering estimation, score following and performance-to-score alignment, and an SATB harmony grader and solver.">
+<meta property="og:description" content="Automatic piano fingering estimation, score following and performance-to-score alignment, and an SATB harmony solver and grader.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://danielshan.com/research">
 <meta property="og:site_name" content="Daniel Shan">
@@ -71,7 +71,7 @@
 
     <section class="rsec" id="satb" aria-labelledby="h-satb">
       <svg class="finger" viewBox="0 0 40 56" aria-hidden="true"><text x="15" y="13" text-anchor="middle" font-size="15" style="font-family:var(--serif)" fill="currentColor">3</text><line x1="19.4" y1="19" x2="19.4" y2="45" stroke="currentColor" stroke-width="1.5"/><ellipse cx="14" cy="46" rx="6.3" ry="4.3" transform="rotate(-22 14 46)" fill="currentColor"/></svg>
-      <h2 id="h-satb">SATB Harmony Grader and Solver</h2>
+      <h2 id="h-satb">SATB Harmony Solver and Grader</h2>
       <p class="meta ui">Independent project. Python, VexFlow, SoundFont playback; Flask locally, Pyodide in the browser. <a href="https://github.com/Daniel-Shan-Hello/satb-harmony-solver-grader">Source on GitHub</a>.</p>
       <p class="finding">Obeying every rule is the easy part; the solver also has to sound like a student who listens.</p>
       <div class="prose">
@@ -79,7 +79,7 @@
         <p>Building the solver taught me more than the grader did. Avoiding part-writing errors is the easy part; a realization can obey every rule and still sound aimless. The solver therefore works in two stages: it searches for rule-valid realizations, then optimizes the musical preferences a student would be taught to hear, including smooth voice leading, comfortable ranges and spacing, a soprano line planned toward each cadence, attraction to fixed notes, and melodic shape across the phrase.</p>
         <p>The tool has two interfaces. Teachers write assignments and get one-click grading and reference solutions; students work in interactive notation with playback, exchange assignments and submissions as JSON files, and can check their own work before handing it in. The original runs as two Flask apps; the teacher interface below runs the same Python engine directly in the browser, with no server.</p>
       </div>
-      <p class="try"><a class="score-link" href="satb/">Try the grader and solver in your browser</a></p>
+      <p class="try"><a class="score-link" href="satb/">Try the solver and grader in your browser</a></p>
       <div class="shots satb-shots">
         <figure>
           <a href="satb/"><img src="satb/img/solved.png" alt="A nine-bar chromatic progression in C major realized in four voices by the solver" width="1600" height="822"></a>

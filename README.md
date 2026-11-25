@@ -13,7 +13,7 @@ Static site, no framework. Hosted on Cloudflare Pages, which serves the `dist/` 
 | `cv/` | CV PDFs. Replace a file here to update the download; the pages do not change. |
 | `img/` | Photographs. `og.jpg` is the link-preview image. |
 | `public/` | Files copied to the site root (`_headers`, `robots.txt`). |
-| `satb/` | The SATB harmony grader and solver, served at `/satb/`. See below. |
+| `satb/` | The SATB harmony solver and grader, served at `/satb/`. See below. |
 | `tools/build.py` | Assembles `dist/` from the above. |
 | `dist/` | The finished site. Committed, so Cloudflare needs no build step. |
 
